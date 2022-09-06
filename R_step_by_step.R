@@ -53,6 +53,7 @@ whatisthis <- function(xx){
 foo <- 500;
 bar <- foo <- 500;
 bar <- foo;
+animal <- 100;
 #' It's not a formal rule, it's rarely even written down, but `foo`, `baz`,
 #' `bat`, etc. are throw-away variables people use for testing. If you need more
 #' test variables, just make up three letter ones that start with `b`.
@@ -137,6 +138,7 @@ foo>50 | shoo<50
 #' values are _not_ the same as missing and they are represented by `NULL`. In
 #' some circumstances you might also run into `Inf`, `-Inf`, and `NaN`. These
 #' often indicate errors somewhere else in your code.
+#' NaN it became missing as part of the processing, NA missing from data
 
 #' Dates and times. Can be created with the `Sys.Date()` or `Sys.time()`
 #' functions or converted from a character string using `as.Date()`.
@@ -189,6 +191,7 @@ length(foo)
 65:38
 -32:12
 seq_len(12)
+seq(-9.1,5.2,by=0.1)
 #' In most other languages, you need to use a `for` loop in order to perform
 #' some sort of change to a series of values. In R, you often don't have to
 #' when you are working with vectors because a lot of functions (including all
@@ -402,3 +405,4 @@ whatisthis(perf) # gives class of the variable
 perf %>% tidy() %>% select(c("p.value")) %>% slice(-1)
 #'perf %>% tidy() %>% select(c("p.value")) %>% slice(-1) %>% p.adjust()
 perf %>% tidy() %>% select(c("p.value")) %>% slice(-1) %>% unlist() %>% p.adjust()
+
