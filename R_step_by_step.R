@@ -369,18 +369,19 @@ ifelse(is.na(veteran$time), max(veteran$time,na.rm = TRUE), veteran$time)
 #' # Datasets and `dplyr`
 #+ Working with datasets and DPLYR
 veteran[[mycolumn]][sample(seq_len(nrow(veteran)), 5)]
-nrow(veteran) %>% seq_len() %>% sample(5) %>% slice(veteran, .) %>% select(mycolumn) %>% unlist %>% unname
+nrow(veteran) %>% seq_len() %>% sample(5) %>% slice(veteran, .) %>% 
+  select(mycolumn) %>% unlist %>% unname
 #in the pipeline, what's on the left of the pipe operator %>% becomes the first argument for the expression to the right of the pipe. if I want the expression to become second argument or else, i put "." in the place that I want it.
 # slice if for choosing rows from the dataset
 nrow(veteran) %>% seq_len() %>% sample(5) %>% slice(veteran, .) %>% pull(mycolumn)
 
-r"(/Users/YOURNAME/Desktop/projects/tsci/TSCI 5050 self/dataset)" %>% gsub("////","/",.) # to replace anything in the address
-list.files("/Users/YOURNAME/Desktop/projects/tsci/TSCI 5050 self/dataset") # to see anyfiles in the folder
-
-dtset <- list.files("/Users/YOURNAME/Desktop/projects/tsci/TSCI 5050 self/dataset", full.names = TRUE) %>%
-  sapply(import) %>% setNames(.,basename(names(.))) # to change the base names
-example1 <- dtset
-example2 <- example1$Birthweight.sav
+# r"(/Users/YOURNAME/Desktop/projects/tsci/TSCI 5050 self/dataset)" %>% gsub("////","/",.) # to replace anything in the address
+# list.files("/Users/YOURNAME/Desktop/projects/tsci/TSCI 5050 self/dataset") # to see anyfiles in the folder
+# 
+# dtset <- list.files("/Users/YOURNAME/Desktop/projects/tsci/TSCI 5050 self/dataset", full.names = TRUE) %>%
+#   sapply(import) %>% setNames(.,basename(names(.))) # to change the base names
+# example1 <- dtset
+# example2 <- example1$Birthweight.sav
 
 #+ file_import, echo = FALSE
 # #' ## Importing a File
