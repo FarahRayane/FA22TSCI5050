@@ -394,16 +394,23 @@ group_by(veteran3, trt) %>%
 #' # Linear Models
 #+ linear_models
 
-vetlm <- lm(time~karno,veteran3)
-vetlm
 nulltime <- time~1 #without a predictor like karno, if i dont have a predictor, it predicts its mean or median based on its average value
-nulltime1 <- update(nulltime,.~.+karno)
-update(nulltime1,.~.+age)
-update(nulltime1,.~.+celltype+diagtime)
+karnotime <- update(nulltime,.~.+karno)
+agetime <- update(karnotime,.~.+age)
+trtagetime <- update(karnotime,.~.+trt+diagtime)
+formulas <- list(nulltime=nulltime, karnotime=karnotime, trtagetime=trtagetime)
 summary(vetlm) # gives detail summary
+tidy(vetlm) # gives tidy cleaner version inside
+vetlm <- lm(time~1,veteran3)
+vetlm
+mean(veteran3$time, na.rm=TRUE)
+update(vetlm, .~.+karno)
+
+#automatically fitting multiple linear models
+lapply(formulas,lm, data=veteran3)
+
 summary(vetlm)$coeff # gives coefficient column
 glance(vetlm) #gives brief
-tidy(vetlm) # gives tidy cleaner version inside
 lm(mpg~hp+wt+vs,mtcars) %>% tidy() %>% select(c("estimate","p.value"))
 #+ Debugging
 vetlm %>% tidy() %>% select(c("estimate","p.value"))
