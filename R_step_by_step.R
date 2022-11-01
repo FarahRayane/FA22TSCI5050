@@ -34,6 +34,9 @@ library(printr); # set limit on number of lines printed
 library(broom); # allows to give clean dataset
 library(dplyr); #add dplyr library
 library(survival);
+library(DataExplorer);
+library(explore);
+library(correlationfunnel);
 
 options(max.print=42);
 panderOptions('table.split.table',Inf); panderOptions('table.split.cells',Inf);
@@ -268,7 +271,6 @@ sum(bat, na.rm= TRUE) # for missing values
 
 #+ vectors_explore
 
-
 #' Here are some aggregation functions. For these, make sure to use `na.rm=T` if
 #' your vector has `NA`s in it... `max()`, `min()`, `mean()`, `median()`,
 #' `quantile()`.
@@ -406,8 +408,20 @@ vetlm
 mean(veteran3$time, na.rm=TRUE)
 update(vetlm, .~.+karno)
 
-#automatically fitting multiple linear models
-lapply(formulas,lm, data=veteran3)
+
+
+#automatically fitting multiple linear models, or running a function on multiple elements from a list
+vetmodels <- lapply(formulas,function(xx) lm(xx,data=veteran3) %>% update(.~.))
+vetmodels
+plot(vetmodels$karnotime)
+plot(vetmodels$trtagetime)
+
+create_report(veteran3)
+plot_correlation(na.omit(veteran3))
+plot_correlation(veteran3,cor_args = list(use = "pairwise.complete.obs"))
+dummify(veteran3[,-9]) %>% cor(use='pairw')
+select(veteran3,-"sim_derivative")
+dummify(select(veteran3,-"sim_derivative")) %>% cor(use='pairw')
 
 summary(vetlm)$coeff # gives coefficient column
 glance(vetlm) #gives brief
@@ -426,3 +440,7 @@ vetlm %>% tidy() %>% select(c("p.value")) %>% slice(-1)
 #'vetlm %>% tidy() %>% select(c("p.value")) %>% slice(-1) %>% p.adjust()
 vetlm %>% tidy() %>% select(c("p.value")) %>% slice(-1) %>% unlist() %>% p.adjust()
 
+explore(veteran3)
+predictorstotime <- na.omit(veteran3) %>% select(-"sim_derivative") %>% binarize() %>%
+  correlate(use='pairw', target=time__125.25_Inf)
+plot_correlation_funnel(predictorstotime)
