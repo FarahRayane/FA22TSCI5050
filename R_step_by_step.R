@@ -401,9 +401,9 @@ karnotime <- update(nulltime,.~.+karno)
 agetime <- update(karnotime,.~.+age)
 trtagetime <- update(karnotime,.~.+trt+diagtime)
 formulas <- list(nulltime=nulltime, karnotime=karnotime, trtagetime=trtagetime)
+vetlm <- lm(time~1,veteran3)
 summary(vetlm) # gives detail summary
 tidy(vetlm) # gives tidy cleaner version inside
-vetlm <- lm(time~1,veteran3)
 vetlm
 mean(veteran3$time, na.rm=TRUE)
 update(vetlm, .~.+karno)
@@ -416,7 +416,7 @@ vetmodels
 plot(vetmodels$karnotime)
 plot(vetmodels$trtagetime)
 
-create_report(veteran3)
+#create_report(veteran3)
 plot_correlation(na.omit(veteran3))
 plot_correlation(veteran3,cor_args = list(use = "pairwise.complete.obs"))
 dummify(veteran3[,-9]) %>% cor(use='pairw')
@@ -440,7 +440,9 @@ vetlm %>% tidy() %>% select(c("p.value")) %>% slice(-1)
 #'vetlm %>% tidy() %>% select(c("p.value")) %>% slice(-1) %>% p.adjust()
 vetlm %>% tidy() %>% select(c("p.value")) %>% slice(-1) %>% unlist() %>% p.adjust()
 
-explore(veteran3)
-predictorstotime <- na.omit(veteran3) %>% select(-"sim_derivative") %>% binarize() %>%
-  correlate(use='pairw', target=time__125.25_Inf)
-plot_correlation_funnel(predictorstotime)
+#explore(veteran3)
+predictorstotime <- na.omit(veteran3) %>% select(-"sim_derivative") %>% binarize() 
+predictorscorr <- correlate(predictorstotime, use='pairw', target=grep(pattern="^time.*Inf$", names(predictorstotime) , value = TRUE))
+plot_correlation_funnel(predictorscorr)
+
+export(veteran3,"veteran3.xlsx")
